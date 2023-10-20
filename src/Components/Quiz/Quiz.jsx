@@ -25,6 +25,11 @@ const Quiz = () => {
   // Get the user and quiz IDs from the route parameters
   const { id } = useParams();
   const userid = JSON.parse(localStorage.getItem("userData"));
+  const [lifelineExhausted, setLifelineExhausted] = useState(false);
+  const [isLifelineExhaustedModalOpen, setIsLifelineExhaustedModalOpen] = useState(false);
+  
+
+
 
   const token = localStorage.getItem("token");
 
@@ -131,10 +136,23 @@ const Quiz = () => {
       }
 
       // Display the wrong answer modal
-      toggleWrongAnswerModal();
+      if (streak?.lifeline === 1) {
+        setLifelineExhausted(true);
+        setIsLifelineExhaustedModalOpen(true);
+      }else{
+        toggleWrongAnswerModal();
+      }
     } else {
       // If the answer is correct, enter explanation mode
       setin_Exp_mode(true);
+    }
+  };
+
+  const handleLifelineExhaustedModalClose = () => {
+    setIsLifelineExhaustedModalOpen(false);
+    if (lifelineExhausted) {
+      // Redirect to the home page
+      navigate(`/home`); // Update the path as needed
     }
   };
 
@@ -339,6 +357,22 @@ const Quiz = () => {
               </Button>
             </ModalFooter>
           </Modal>
+
+          {/*  */}
+
+          <Modal
+        isOpen={isLifelineExhaustedModalOpen}
+        toggle={handleLifelineExhaustedModalClose}
+      >
+        <ModalBody>
+          You have exhausted your lifeline. You will be redirected to the home page.
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleLifelineExhaustedModalClose}>
+            OK
+          </Button>
+        </ModalFooter>
+      </Modal>
         </div>
       )}
     </>
