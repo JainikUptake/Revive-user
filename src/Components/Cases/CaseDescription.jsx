@@ -86,7 +86,7 @@ const CaseDescription = () => {
             {caseDetails.case_descriptions &&
               caseDetails.case_descriptions.map((description, index) => (
                 <TabPanel key={index}>
-                  <img src={description?.case_desc_image} alt="" />
+                  <img src={description?.case_desc_image} alt="case_image" />
                   <h5>{description.case_desc_title}</h5>
                   <p>{description.case_desc_description}</p>
                 </TabPanel>

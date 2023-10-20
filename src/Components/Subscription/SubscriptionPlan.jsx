@@ -52,7 +52,7 @@ const SubscriptionPlan = () => {
       </center>
       <Row>
         {plans.map((plan) => (
-          <Col lg="3" key={plan.id}>
+          <Col lg="4" key={plan.id}>
             <Card className="custom-card my-2">
               <CardHeader className="custom-card-header">
                 {plan.subscriptionName}
