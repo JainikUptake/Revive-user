@@ -365,7 +365,7 @@ const Quiz = () => {
         toggle={handleLifelineExhaustedModalClose}
       >
         <ModalBody>
-          You have exhausted your lifeline. You will be redirected to the home page.
+          Oops Lifeline Exhausted !!! . You will be redirected to the home page.
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={handleLifelineExhaustedModalClose}>
