@@ -1,0 +1,50 @@
+.streak-container {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin: 20px auto;
+    width: 300px;
+  }
+  
+  .streak-heading {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #ff5722; /* Change the color to your preference */
+  }
+  
+  .streak-label {
+    font-weight: bold;
+    font-size: 2rem;
+  }
+  
+  .streak-value {
+    color: green; /* Change the color to your preference */
+    font-size: 2rem;
+    margin-left: 5px;
+  }
+  
+  .streak-description {
+    color: #777;
+  }
+  
+  .claim-button {
+    background-color: #4caf50; /* Change the color to your preference */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .claim-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .claim-button:hover {
+    background-color: #45a049; /* Change the color to your preference */
+  }
+  
