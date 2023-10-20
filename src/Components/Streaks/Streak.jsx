@@ -7,8 +7,7 @@ const Streak = () => {
   const [streak, setStreak] = useState();
   const [timer, setTimer] = useState(0);
 
-  const userData = JSON.parse(localStorage.getItem('userData'));
-  const id = userData.id;
+  const user_id = JSON.parse(localStorage.getItem('userData'));
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const Streak = () => {
 
   const getStreaks = async () => {
     try {
-      const response = await axios.get(`${Baseurl}/get/lifeline/${id}`, {
+      const response = await axios.get(`${Baseurl}/get/lifeline/${user_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -41,7 +40,7 @@ const Streak = () => {
     try {
       if (timer <= 0) {
         // Make the API call to claim the streak
-        const response = await axios.put(`${Baseurl}/claim/${id}`, {}, {
+        const response = await axios.put(`${Baseurl}/claim/${user_id}`, {}, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

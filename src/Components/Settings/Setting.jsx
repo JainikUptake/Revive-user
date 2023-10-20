@@ -15,6 +15,14 @@ const Setting = () => {
         </h2>
       </center>
       <div className="d-flex flex-column">
+      <Button
+          className="mt-4"
+          size="lg"
+          color="success  "
+          onClick={() => navigate(`/profile`)}
+        >
+          Your Profile
+        </Button>
         <Button
           className="mt-4"
           size="lg"

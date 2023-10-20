@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Container } from "reactstrap";
-import CustomModal from "./CustomModal"; // Import your custom modal
+import {
+  Button,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
 import "./quiz.css";
 import { Baseurl } from "../url/BaseURL";
 
@@ -18,8 +24,8 @@ const Quiz = () => {
 
   // Get the user and quiz IDs from the route parameters
   const { id } = useParams();
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const userid = userData.id;
+  const userid = JSON.parse(localStorage.getItem("userData"));
+
   const token = localStorage.getItem("token");
 
   // State to track wrong answers, correctly selected options, and modal visibility
@@ -28,20 +34,17 @@ const Quiz = () => {
   const [correctlySelected, setCorrectlySelected] = useState([]);
   const [isWrongAnswerModalOpen, setIsWrongAnswerModalOpen] = useState(false);
   const [in_Exp_mode, setin_Exp_mode] = useState(false);
-  const [totalQuestion, settotalQuestion] = useState()
-
+  const [totalQuestion, settotalQuestion] = useState();
+ 
 
   // Fetch the user's streak from the API
   async function fetchStreak() {
     try {
-      const response = await axios.get(
-        `${Baseurl}/get/lifeline/${userid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${Baseurl}/get/lifeline/${userid}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       // console.log(response.data, "hey");
       setStreak(response.data.data);
     } catch (error) {
@@ -49,20 +52,19 @@ const Quiz = () => {
     }
   }
 
+  
+
   // Fetch the quiz data when the component mounts
   useEffect(() => {
     async function fetchQuizData() {
       try {
-        const response = await axios.get(
-          `${Baseurl}/quiz/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${Baseurl}/quiz/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setQuizData(response.data.data);
-        settotalQuestion(response.data.data.length)
+        settotalQuestion(response.data.data.length);
       } catch (error) {
         console.error("Error fetching quiz data: ", error);
       }
@@ -108,6 +110,7 @@ const Quiz = () => {
   };
 
   // Function to handle submitting an answer
+  // Function to handle submitting an answer
   const handleSubmitAnswer = async () => {
     if (!is_correct) {
       console.log("if not correct");
@@ -130,25 +133,25 @@ const Quiz = () => {
       // Display the wrong answer modal
       toggleWrongAnswerModal();
     } else {
+      // If the answer is correct, enter explanation mode
       setin_Exp_mode(true);
     }
   };
 
   // Function to handle moving to the next question
   const handleNextQuestion = async () => {
-    // Clear the selected option 
+    // Clear the selected option
     setSelectedOption(null);
     setin_Exp_mode(false); // Exit explanation mode
 
-
     // Check if the selected option is correct
-    if (
-      selectedOption !== null &&
-      quizData[currentQuestion].options[selectedOption].correct_ans === 1
-    ) {
-      setScore(score + 1);
-    } else {
-      if (selectedOption !== null) {
+    if (selectedOption !== null) {
+      const selectedOptionData =
+        quizData[currentQuestion].options[selectedOption];
+      if (selectedOptionData.correct_ans !== 1) {
+        // If the selected option is incorrect, highlight it and reduce the lifeline
+        setWrongAnswers(wrongAnswers + 1);
+
         try {
           // Reduce the user's lifeline
           await axios.put(
@@ -160,15 +163,18 @@ const Quiz = () => {
               },
             }
           );
-          // Fetch to updated streak
+          // Fetch the updated streak
           fetchStreak();
         } catch (error) {
           console.error("Error reducing lifeline: ", error);
         }
+
+        // Display the wrong answer modal
+        toggleWrongAnswerModal();
+      } else {
+        // If the answer is correct, increase the score
+        setScore(score + 1);
       }
-
-
-  
     }
 
     // Move to the next question if available, else mark the quiz as completed
@@ -179,18 +185,16 @@ const Quiz = () => {
     }
   };
 
-
   const navigate = useNavigate();
 
   const postScoreToAPI = async () => {
     try {
-
       const data = {
         user_id: userid,
         quiz_id: id,
         score: score,
         is_completed: 1,
-        total_question : totalQuestion
+        total_question: totalQuestion,
       };
 
       await axios.post(`${Baseurl}/result`, data, {
@@ -210,21 +214,24 @@ const Quiz = () => {
 
     // Navigate to the analysis page
     navigate(`/analysis/${id}`);
-
   };
 
-  function QuitGame(){
+  function QuitGame() {
     navigate(`/case/description/${id}`);
-    setScore(0) 
-        setIncorrectlySelected([]);
-      setCorrectlySelected([]);
+    setScore(0);
+    setIncorrectlySelected([]);
+    setCorrectlySelected([]);
   }
   return (
     <>
       {in_Exp_mode ? (
         <Container>
           <h3 className="mb-4 fw-bold">Explanation:</h3>
-          <p className="mb-4">{quizData[currentQuestion].explanation}</p>
+          <img
+            src={quizData[currentQuestion]?.explanation_image}
+            alt="exp-image"
+          />
+          <p className="mb-4">{quizData[currentQuestion]?.explanation}</p>
           <center>
             <Button color="info" onClick={handleNextQuestion}>
               Next Question
@@ -234,7 +241,9 @@ const Quiz = () => {
       ) : (
         <div className="quiz-container">
           {/* Quit button */}
-          <Button color="danger" onClick={QuitGame}>Quit</Button>
+          <Button color="danger" onClick={QuitGame}>
+            Quit
+          </Button>
 
           {/* Display the user's lifeline streak */}
           <h2 className="streak-heading fw-bold text-center">
@@ -249,7 +258,7 @@ const Quiz = () => {
           {/* Check if there is quiz data available and the current question is within bounds */}
           {quizData.length > 0 &&
             currentQuestion < quizData.length &&
-            (!quizCompleted ?  (
+            (!quizCompleted ? (
               <div>
                 {/* Display the current question number */}
                 <h2 className="quiz-question">
@@ -300,7 +309,7 @@ const Quiz = () => {
                   </div>
                 )}
               </div>
-            ): null)}
+            ) : null)}
 
           {quizCompleted && (
             <div className="quiz-completed">
@@ -315,12 +324,21 @@ const Quiz = () => {
             </div>
           )}
 
-          <CustomModal
+          <Modal
             isOpen={isWrongAnswerModalOpen}
             toggle={toggleWrongAnswerModal}
-            title="Wrong Answer"
-            message="You selected the wrong answer. 😞 Your lifeline has been reduced by 1."
-          />
+          >
+            
+            <ModalBody>
+              You selected the wrong answer. 😞 Your lifeline has been reduced
+              by 1.
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={() => setin_Exp_mode(true)}>
+                OK{" "}
+              </Button>
+            </ModalFooter>
+          </Modal>
         </div>
       )}
     </>

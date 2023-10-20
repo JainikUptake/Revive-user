@@ -8,8 +8,8 @@ const Statistics = () => {
   const [statisticsData, setStatisticsData] = useState(null);
   const token = localStorage.getItem("token");
 
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const id = userData.id;
+  const id = JSON.parse(localStorage.getItem("userData"));
+
 
   useEffect(() => {
     axios
@@ -31,10 +31,10 @@ const Statistics = () => {
   const COLORS = ["green", "red"];
 
   // Calculate the percentage and ratio
-  const totalQuestions = statisticsData?.correct_answer + statisticsData?.wrong_answer;
-  const correctAnswerPercentage = ((statisticsData?.correct_answer / totalQuestions) * 100).toFixed(2);
-  const wrongAnswerPercentage = ((statisticsData?.wrong_answer / totalQuestions) * 100).toFixed(2);
-  const answerRatio = `${statisticsData?.correct_answer}:${statisticsData?.wrong_answer}`;
+  const totalQuestions = statisticsData?.correct_answers + statisticsData?.wrong_answers;
+  const correctAnswerPercentage = ((statisticsData?.correct_answers / totalQuestions) * 100).toFixed(2);
+  const wrongAnswerPercentage = ((statisticsData?.wrong_answers / totalQuestions) * 100).toFixed(2);
+  const answerRatio = `${statisticsData?.correct_answers}:${statisticsData?.wrong_answers}`;
 
   return (
     <Container className="statistics-container">
@@ -48,7 +48,7 @@ const Statistics = () => {
             <h5>
               Total Quizzes:
               <span className="text-warning fw-bold">
-                {statisticsData?.total_quizzes}
+                 {statisticsData?.total_quizzes}
               </span>
             </h5>
             <h5>
@@ -75,13 +75,13 @@ const Statistics = () => {
             <h5>
               Correct Answers:{" "}
               <span className="text-success fw-bold">
-                {statisticsData?.correct_answer}
+                {statisticsData?.correct_answers}
               </span>
             </h5>
             <h5>
               Wrong Answers:{" "}
               <span className="text-danger fw-bold">
-                {statisticsData?.wrong_answer}{" "}
+                {statisticsData?.wrong_answers}{" "}
               </span>
             </h5>
           </div>
@@ -98,11 +98,11 @@ const Statistics = () => {
                       data={[
                         {
                           name: "Correct Answers",
-                          value: statisticsData.correct_answer,
+                          value: statisticsData.correct_answers,
                         },
                         {
                           name: "Wrong Answers",
-                          value: statisticsData.wrong_answer,
+                          value: statisticsData.wrong_answers,
                         },
                       ]}
                       cx="50%"
@@ -114,11 +114,11 @@ const Statistics = () => {
                       {[
                         {
                           name: "Correct Answers",
-                          value: statisticsData.correct_answer,
+                          value: statisticsData.correct_answers,
                         },
                         {
                           name: "Wrong Answers",
-                          value: statisticsData.wrong_answer,
+                          value: statisticsData.wrong_answers,
                         },
                       ].map((entry, index) => (
                         <Cell

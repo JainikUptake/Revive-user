@@ -21,6 +21,7 @@ import Quiz from "./Components/Quiz/Quiz";
 import Streak from "./Components/Streaks/Streak";
 import Analysis from "./Components/Quiz/Analysis";
 import Statistics from "./Components/Statistics/Statistics";
+import Profile from "./Components/Settings/Profile";
 
 function AppRoutes({ isLoggedIn, handleLogin }) {
   const routes = [
@@ -108,6 +109,10 @@ function AppRoutes({ isLoggedIn, handleLogin }) {
       path: "/statistics",
       element: isLoggedIn ? <Statistics /> : <Navigate to="/login" />,
     },
+    {
+      path: "/profile",
+      element: isLoggedIn ? <Profile /> : <Navigate to="/login" />,
+    }
   ];
 
   return (

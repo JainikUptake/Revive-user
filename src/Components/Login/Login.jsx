@@ -33,7 +33,8 @@ const Login = ({ handleLogin }) => {
         setSuccessMessage('Login successful');
         setError('');
         // Pass the token to handleLogin
-        handleLogin(response.data.token,response.data.data);
+        console.log(response.data.data,"from login")
+        handleLogin(response.data.token,response?.data?.data?.id);
       }
     } catch (err) {
       setError('Login failed. Please check your input.');

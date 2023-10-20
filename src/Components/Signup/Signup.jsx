@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Container,
@@ -33,6 +33,47 @@ const Signup = () => {
 
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [collegeNames, setCollegeNames] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    // Fetch college names from the API and update the state
+    axios.get(`http://127.0.0.1:8000/api/get/collegeName`)
+      .then((response) => {
+        console.log(response)
+        if (response.data.status) {
+          const collegeData = response.data.data;
+          const collegeNamesArray = collegeData.map((college) => college.college_name);
+          setCollegeNames(collegeNamesArray);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch college names:", error);
+      });
+
+      // fetch state with city
+      axios.get(`http://127.0.0.1:8000/api/get/statesWithCities`)
+      .then((response) => {
+        if (response.data.status) {
+          const stateData = response.data.data;
+          setStates(stateData);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch states and cities:", error);
+      });
+  }, []);
+
+  const handleStateChange = (e) => {
+    const selectedStateId = e.target.value;
+    const selectedState = states.find((state) => state.state.id === parseInt(selectedStateId));
+    console.log(selectedState)
+    if (selectedState) {
+      const cityData = selectedState.cities;
+      setCities(cityData);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -123,46 +164,54 @@ const Signup = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <select
-                  class="form-select"
+              <select
+                  className="form-select"
                   aria-label="Default select example"
                   name="state"
                   id="state"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    handleStateChange(e);
+                  }}
                 >
-                  <option selected>Select State</option>
-                  <option value="1">Gujarat</option>
-                  <option value="2">Punjab</option>
+                  <option value="" disabled>Select State</option>
+                  {states.map((state, index) => (
+                    <option key={index} value={state.state.id}>
+                      {state.state.state_name}
+                    </option>
+                  ))}
                 </select>
               </FormGroup>
               <FormGroup>
-                <select
-                  class="form-select"
+              <select
+                  className="form-select"
                   aria-label="Default select example"
                   name="city"
                   id="city"
                   onChange={handleChange}
                 >
-                  <option selected>Select City</option>
-                  <option value="1">Abohar</option>
-                  <option value="27">Amritsar</option>
-                  <option value="8">Ahmedabad</option>
-                  <option value="393">Rajkot</option>
-                  <option value="450">Surat</option>
+                  <option value="" disabled>Select City</option>
+                  {cities.map((city, index) => (
+                    <option key={index} value={city.id}>
+                      {city.city_name}
+                    </option>
+                  ))}
                 </select>
               </FormGroup>
               <FormGroup>
-                <select
-                  class="form-select"
+              <select
+                  className="form-select"
                   aria-label="Default select example"
-                  onChange={handleChange}
                   name="name_of_college"
                   id="name_of_college"
+                  onChange={handleChange}
                 >
-                  <option selected>name_of_college</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option selected>Select College</option>
+                  {collegeNames.map((name, index) => (
+                    <option key={index} value={name}>
+                      {name}
+                    </option>
+                  ))}
                 </select>
               </FormGroup>
               <FormGroup>

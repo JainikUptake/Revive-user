@@ -9,13 +9,16 @@ import { Baseurl } from "../url/BaseURL";
 const SubscriptionDetail = () => {
   const [planDetail, setPlanDetail] = useState();
   const { id } = useParams();
-  const [user, setUser] = useState(null);
+
   const [subscriptions, setSubscriptions] = useState([]);
 
+  const token = localStorage.getItem("token");
+  const user_id = JSON.parse(localStorage.getItem('userData'));
+ 
+
   const handleSubscriptionCreation = async () => {
-    const token = localStorage.getItem("token");
-    const userInfo = JSON.parse(localStorage.getItem('userData'));
-    const user_id = userInfo.id;
+
+
   
     if (!token || !user_id) {
       console.error("Token or UserID not found in localStorage.");
@@ -49,9 +52,7 @@ const SubscriptionDetail = () => {
 
 useEffect(() => {
   async function fetchSubscriptions() {
-    const userInfo = JSON.parse(localStorage.getItem('userData'));
-    const user_id = userInfo.id
-    const token = localStorage.getItem("token");
+  
     if (!token || !user_id) {
       console.error("Token or UserID not found in localStorage.");
       return;
@@ -66,9 +67,8 @@ useEffect(() => {
           },
         }
       );
-
-      setUser(response.data.data.user);
-      setSubscriptions(response.data.data.subscriptions);
+      console.log(response,"response ")
+      setSubscriptions(response.data.data.subscription_data);
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +76,7 @@ useEffect(() => {
 
   fetchSubscriptions();
 }, []);
-
+console.log(subscriptions)
 
   async function getPlan() {
     const token = localStorage.getItem("token");
@@ -114,7 +114,7 @@ useEffect(() => {
 
     try {
         const response = await axios.post(
-            'http://127.0.0.1:8000/api/create-payment-session',
+            'http://127.0.0.1:8000/api/create/payment/session',
             {
                 amount: planDetail?.price,
             },

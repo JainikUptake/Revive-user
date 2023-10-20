@@ -45,6 +45,7 @@ const Analysis = () => {
       <div className="d-flex flex-column">
         {analysisData.map((analysis, index) => (
           <div key={analysis.id}>
+            <img src={analysis?.analysis_image} alt="an-image" />
             <h4 className="fw-bold">
               {index + 1}. {analysis.question}
             </h4>
