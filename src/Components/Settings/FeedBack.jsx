@@ -16,15 +16,41 @@ const FeedBack = () => {
   const [username, setUsername] = useState("");
   const [feedback, setFeedback] = useState("");
   const [modal, setModal] = useState(false);
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = localStorage.getItem("userData");
+  const token = localStorage.getItem("token");
+
+
+  async function getUser() {
+    if (!token) {
+      console.error("Token not found in localStorage.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/get/user/${userData}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response?.status === 200) {
+        setUsername(response?.data?.data[0].first_name + " " + response?.data?.data[0].last_name);
+      }else{
+        setUsername("failed to fetch username")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    if (userData) {
-      setUsername(userData.first_name + " " + userData.last_name);
-    } else {
-      setUsername("");
-    }
-  }, [userData]);
+    getUser();
+  }, []);
+
+
+
 
   const toggleModal = () => {
     setModal(!modal);

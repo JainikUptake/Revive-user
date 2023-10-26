@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Form, FormGroup, Input, Button } from 'reactstrap';
 import logo from "../assets/logo1024.png";
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Baseurl } from '../url/BaseURL';
-
+import "../Signup/signup.css"
 const Login = ({ handleLogin }) => {
 
   const [formData, setFormData] = useState({
@@ -28,20 +28,22 @@ const Login = ({ handleLogin }) => {
   
     try {
       const response = await axios.post(`${Baseurl}/login`, formData);
-  
+      console.log(response,"from login")
       if (response.status === 200) {
         setSuccessMessage('Login successful');
         setError('');
         // Pass the token to handleLogin
-        // console.log(response.data.data,"from login")
-        handleLogin(response.data.token,response?.data?.data?.id);
+        handleLogin(response.data.token,response.data.data.id);
       }
     } catch (err) {
       setError('Login failed. Please check your input.');
     }
   };
-  
 
+const navigate = useNavigate()
+function navigateForgotPassword(){
+  navigate(`/forgotpassword`, { state: { email: formData.email } });
+}
 
   return (
     <Container>
@@ -49,6 +51,7 @@ const Login = ({ handleLogin }) => {
         <Col sm="6">
           <div className="d-flex flex-column justify-content-center align-items-center mt-5">
             <img src={logo} alt="Logo" className="logo" />
+            <h2 className="font-weight-bold">Steth Up</h2>
           </div>
         </Col>
         <Col sm="6" className="registration-form-container">
@@ -61,7 +64,7 @@ const Login = ({ handleLogin }) => {
                   name="login_type"
                   id="login_type"
                   value="email"
-                  hidden // Hidden field with default value 'email'
+                  hidden
                 />
               </FormGroup>
               <FormGroup>
@@ -91,11 +94,14 @@ const Login = ({ handleLogin }) => {
             {successMessage && (
               <p className="success-message">{successMessage}</p>
             )}
-            <p>
+            <p className='mt-3'>
               <NavLink to="/loginOTP">Login with OTP</NavLink>
             </p>
             <p>
-              <a href="/forgot-password">Forgot Password?</a>
+              Don't have an account? <NavLink to="/">Sign up</NavLink>
+            </p>
+            <p>
+              <span  onClick={navigateForgotPassword}>Forgot Password?</span>
             </p>
           </div>
         </Col>

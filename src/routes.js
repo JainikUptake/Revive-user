@@ -21,6 +21,9 @@ import Quiz from "./Components/Quiz/Quiz";
 import Streak from "./Components/Streaks/Streak";
 import Analysis from "./Components/Quiz/Analysis";
 import Statistics from "./Components/Statistics/Statistics";
+import Phone from "./Components/verification/Phone";
+import Email from "./Components/verification/Email";
+import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import Profile from "./Components/Settings/Profile";
 
 function AppRoutes({ isLoggedIn, handleLogin }) {
@@ -28,6 +31,18 @@ function AppRoutes({ isLoggedIn, handleLogin }) {
     {
       path: "/",
       element: isLoggedIn ? <Navigate to="/home" /> : <Signup />,
+    },
+    {
+      path: "/verifyphone",
+      element: isLoggedIn ? <Navigate to="/home" /> : <Phone />,
+    },
+    {
+      path: "/verifyemail",
+      element: isLoggedIn ? <Navigate to="/home" /> : <Email handleLogin={handleLogin}/>,
+    },
+    {
+      path: "/forgotpassword",
+      element: isLoggedIn ? <Navigate to="/home" /> : <ForgotPassword />,
     },
     {
       path: "/login",

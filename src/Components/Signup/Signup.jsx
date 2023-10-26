@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState , useEffect} from "react";
 import axios from "axios";
 import {
   Container,
@@ -12,10 +12,11 @@ import {
 } from "reactstrap";
 import "./signup.css";
 import logo from "../assets/logo1024.png";
-import { NavLink } from "react-router-dom";
-import { Baseurl } from "../url/BaseURL";
+import { NavLink, useNavigate } from "react-router-dom";
+
 
 const Signup = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -80,6 +81,8 @@ const Signup = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -92,13 +95,14 @@ const Signup = () => {
     try {
       // Make a POST request to the registration API
       const response = await axios.post(
-        `${Baseurl}/register`,
+        `http://127.0.0.1:8000/api/register`,
         formData
       );
 
       // Handle the API response
       if (response.status === 200) {
         setSuccessMessage("Registration successful");
+        navigate(`/verifyphone`, { state: { phone: formData.phone , email: formData.email } });
         setError("");
       }
     } catch (err) {
@@ -106,15 +110,17 @@ const Signup = () => {
     }
   };
 
+
+
   return (
     <Container>
       <Row className="mt-5">
-        <Col sm="6">
+        <Col sm="5">
           <div className="d-flex flex-column justify-content-center align-items-center mt-5">
             <img src={logo} alt="Logo" className="logo" />
           </div>
         </Col>
-        <Col sm="6" className="registration-form-container">
+        <Col sm="7" className="registration-form-container">
           <div className="registration-form-inner">
             <h2>Registration</h2>
             <Form onSubmit={handleSubmit}>
@@ -284,9 +290,7 @@ const Signup = () => {
             <p>
               Already have an account? <NavLink to="/login">Login</NavLink>
             </p>
-            <p>
-              <a href="/forgot-password">Forgot Password?</a>
-            </p>
+          
           </div>
         </Col>
       </Row>

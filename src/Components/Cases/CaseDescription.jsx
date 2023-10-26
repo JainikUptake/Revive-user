@@ -62,7 +62,7 @@ const CaseDescription = () => {
 
  
   function handleToQuiz(){
-    if (streak.lifeline < 1) {
+    if (streak && streak?.lifeline < 1) {
       setModal(true)
     }else{
       navigate(`/quiz/${id}`)

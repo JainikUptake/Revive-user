@@ -50,7 +50,7 @@ const Quiz = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response.data, "hey");
+      console.log(response.data, "hey");
       setStreak(response.data.data);
     } catch (error) {
       console.error("Error fetching streak: ", error);
@@ -214,7 +214,7 @@ const Quiz = () => {
         is_completed: 1,
         total_question: totalQuestion,
       };
-
+      console.log(data)
       await axios.post(`${Baseurl}/result`, data, {
         headers: {
           Authorization: `Bearer ${token}`,

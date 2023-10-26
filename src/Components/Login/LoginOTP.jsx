@@ -68,12 +68,13 @@ const LoginOTP = ({ handleLogin }) => {
   return (
     <Container>
       <Row className="mt-5">
-        <Col sm="6">
+        <Col sm="4">
           <div className="d-flex flex-column justify-content-center align-items-center mt-5">
             <img src={logo} alt="Logo" className="logo" />
+            <h2 className="font-weight-bold">Steth Up</h2>
           </div>
         </Col>
-        <Col sm="6" className="registration-form-container">
+        <Col sm="8" className="registration-form-container">
           <div className="registration-form-inner">
             <h2>Login With OTP</h2>
 
